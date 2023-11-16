@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { createBet, getLeagues, getUpcomingPreview } from '../utils/betopenly-utils'; // adjust the path as needed
+import { createBet, getLeagues, getUpcomingPreview } from '../../utils/betopenly-utils'; // adjust the path as needed
 
 
 export default async function handler(
