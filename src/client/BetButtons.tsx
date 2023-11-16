@@ -6,7 +6,7 @@ import Loading from './Loading';
 import Modal from './Modal';
 
 export default function BetButtons() {
-    const [isLoading, setLoading] = useState(true);
+    const [isLoading, setLoading] = useState(false);
 
     const handleClick = (action: string) => {
         console.log(`Populating ${action}`); // Replace with your actual function
