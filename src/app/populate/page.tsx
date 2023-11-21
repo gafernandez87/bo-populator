@@ -32,7 +32,7 @@ export default function Page() {
             <h1 className={styles.title}>Betopenly Populator</h1>
 
             <div className={styles.buttonContainer}>
-                <Card title='Populate Bets' body='Creates 1 bet of each bet type for each available league' button='Populate' buttonClick={() => connectWebSocket()} />
+                <Card title='Populate Bets' body='Creates 1 bet of each bet type for each available league' button='Populate' buttonClick={() => handleClick('populate-bets')} />
                 <Card title='Populate Parlays' body='Creates 1 Parlay for each available league' button='Populate' buttonClick={() => handleClick('populate-parlays')} />
                 <Card title='Populate Contests' body='Creates 1 Contest of each Type for each available league' button='Populate' buttonClick={() => handleClick('populate-contest')} />
             </div>
