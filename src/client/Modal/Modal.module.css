@@ -1,5 +1,6 @@
 /* components/Modal.module.css */
 .modal {
+  padding: 2rem;
   position: fixed;
   top: 0;
   left: 0;

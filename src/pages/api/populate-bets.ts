@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { createBet, getLeagues, getUpcomingPreview } from '../../utils/betopenly-utils'; // adjust the path as needed
+import { createBet, getUpcomingPreview } from '../../utils/betopenly-utils'; // adjust the path as needed
+import { getFeedbackInstance } from '@/utils/populate-feedback-cache';
 
 
 export default async function handler(
@@ -7,17 +8,22 @@ export default async function handler(
     res: NextApiResponse
 ) {
     try {
-        await populateRegularBets();
-        res.status(200);
+        const feedback = getFeedbackInstance();
+        feedback.reset();
+
+        populateRegularBets(req.body).then(() => {
+            feedback.finished = true;
+        });
+
+        res.status(200).json({ message: "proccesing... hit /api/check-populate to get feedback" });
     } catch (error) {
         res.status(500).json({ message: 'Server error' });
     }
 }
 
 
-async function populateRegularBets() {
+async function populateRegularBets(leagues: string[]) {
     console.log("=======Populate Bets=======");
-    const leagues = await getLeagues('GAME');
 
     // Store the amount of bets created for each league
     let betsCreated;
@@ -93,5 +99,14 @@ async function create(league: string, competitorId: string, eventId: string, bet
         'odds': odds
     };
 
-    return await createBet(league, 'GAME', [betDetail]);
+    const created = await createBet(league, 'GAME', [betDetail]);
+    if (created) {
+        const feedback = getFeedbackInstance();
+
+        feedback.bets = [...feedback.bets, {
+            league,
+            betType,
+        }];
+    }
+    return created;
 }

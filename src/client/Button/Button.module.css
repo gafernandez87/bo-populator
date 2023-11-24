@@ -1,36 +1,3 @@
-.container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 0 2rem;
-}
-
-.title {
-    padding: 1rem;
-    color: gray;
-}
-
-.cardsContainer {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 1rem;
-}
-
-.card {
-    color: white;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 1rem;
-}
-
-.card>div:first-child {
-    display: flex;
-    flex-flow: wrap column;
-    gap: 1rem;
-}
-
 .btn {
     font-size: 1.2rem;
     padding: 1rem 2.5rem;
@@ -55,18 +22,4 @@
     background: rgb(2, 29, 78);
     background: linear-gradient(270deg, rgba(2, 29, 78, 0.681) 0%, rgba(31, 215, 232, 0.873) 60%);
     color: rgb(4, 4, 38);
-}
-
-.leaguesContainer {
-    display: flex;
-    flex-flow: nowrap column;
-    gap: 10px;
-}
-
-.select {
-    height: 100%;
-}
-
-.feedback textarea {
-    height: 100%;
 }

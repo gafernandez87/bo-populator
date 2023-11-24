@@ -22,7 +22,7 @@ export async function getLeagues(eventType: string) {
                 return acc;
             }, []);
 
-            console.log("Leagues: ", leagues);
+            // console.log("Leagues: ", leagues);
             return leagues;
         })
 }
@@ -38,6 +38,7 @@ export async function getUpcomingPreview(league: string, eventType: string) {
 }
 
 export async function createBet(league: string, eventType: string, betDetails: any[]) {
+    await getToken();
     console.log("Creating", league);
 
     const bet = {
