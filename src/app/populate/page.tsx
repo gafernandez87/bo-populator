@@ -56,7 +56,6 @@ export default function Page() {
                     console.log(feedback);
 
                     const betsCreated = feedback.bets.map((bet: any) => `${bet.league} ${bet.betType} Created`).join('\n');
-                    console.log(betsCreated);
                     setBetsCreated(betsCreated)
 
                     if (feedback.finished) {
@@ -64,7 +63,7 @@ export default function Page() {
                         clearInterval(intervalRef);
                     }
                 });
-        }, 500);
+        }, 700);
 
     }
 
@@ -75,20 +74,20 @@ export default function Page() {
             <div className={styles.cardsContainer}>
                 <Card>
                     <div className={styles.card}>
-                        <div>
-                            <h3>Populate Bets</h3>
-                            <p>Click Begin To See Available Leagues</p>
-                            <Button click={getLeagues}>Get Leagues</Button>
-                        </div>
                         <div className={styles.leaguesContainer}>
-                            Leagues:
+                            <span>Leagues</span>
                             <select onChange={selectLeagues} className={styles.select} multiple>
                                 {leagues.map(league => <option key={league}>{league}</option>)}
                             </select>
-                            <button onClick={populate}>Populate</button>
+                            <Button click={getLeagues} size={'sm'}>Get Leagues</Button>
                         </div>
+
+                        <Button disabled={selectedLeagues.length === 0} click={populate}>Start Populate</Button>
+
                         <div className={styles.feedback}>
+                            Feedback {isPopulating && <p>Loading...</p>}
                             <textarea value={betsCreated}></textarea>
+                            {!isPopulating && betsCreated && <p>Done</p>}
                         </div>
                     </div>
                 </Card>
@@ -97,10 +96,9 @@ export default function Page() {
                 <Card title='Populate Contests' body='Creates 1 Contest of each Type for each available league' button='Populate' buttonClick={() => handleClick('populate-contest')} /> */}
             </div>
 
-            <Modal show={isLoading || isPopulating}>
+            <Modal show={isLoading}>
                 <h2>Loading</h2>
                 <Loading />
-                {isPopulating && <textarea value={betsCreated}></textarea>}
             </Modal>
         </div>
     );

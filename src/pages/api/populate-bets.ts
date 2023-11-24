@@ -11,7 +11,7 @@ export default async function handler(
         const feedback = getFeedbackInstance();
         feedback.reset();
 
-        populateRegularBets(req.body).then(() => {
+        populateRegularBets(req.body, feedback).then(() => {
             feedback.finished = true;
         });
 
@@ -22,7 +22,7 @@ export default async function handler(
 }
 
 
-async function populateRegularBets(leagues: string[]) {
+async function populateRegularBets(leagues: string[], feedback: Object) {
     console.log("=======Populate Bets=======");
 
     // Store the amount of bets created for each league
@@ -51,21 +51,21 @@ async function populateRegularBets(leagues: string[]) {
             const home = payloadInfo.home.id;
 
             if (payloadInfo.supportedBetTypes.threeWaySupported && payloadInfo.odds.homeThreeWay !== null && !betsCreated['ML']) {
-                const created = await create(league, home, game.id, 'THREE_WAY', payloadInfo.odds.homeThreeWay, null);
+                const created = await create(feedback, league, home, game.id, 'THREE_WAY', payloadInfo.odds.homeThreeWay, null);
                 if (created) {
                     betsCreated['ML'] = true;
                 }
             }
 
             if (!payloadInfo.supportedBetTypes.threeWaySupported && payloadInfo.odds.homeMoneyline !== null && !betsCreated['ML']) {
-                const created = await create(league, home, game.id, 'MONEYLINE', payloadInfo.odds.homeMoneyline, null);
+                const created = await create(feedback, league, home, game.id, 'MONEYLINE', payloadInfo.odds.homeMoneyline, null);
                 if (created) {
                     betsCreated['ML'] = true;
                 }
             }
 
             if (payloadInfo.odds.homeSpreadline !== null && payloadInfo.odds.homeSpread !== null && !betsCreated['SPREAD']) {
-                const created = await create(league, home, game.id, 'SPREAD', payloadInfo.odds.homeSpreadline, payloadInfo.odds.homeSpread);
+                const created = await create(feedback, league, home, game.id, 'SPREAD', payloadInfo.odds.homeSpreadline, payloadInfo.odds.homeSpread);
                 if (created) {
                     betsCreated['SPREAD'] = true;
                 }
@@ -73,14 +73,14 @@ async function populateRegularBets(leagues: string[]) {
 
             // Creates Under ONLY if I already have an over created to avoid Tinder matchmaking.
             if (payloadInfo.odds.underLine !== null && payloadInfo.odds.overUnderOdds !== null && betsCreated['OVER'] && !betsCreated['UNDER']) {
-                const created = await create(league, home, game.id, 'UNDER', payloadInfo.odds.overLine, payloadInfo.odds.overUnderOdds);
+                const created = await create(feedback, league, home, game.id, 'UNDER', payloadInfo.odds.overLine, payloadInfo.odds.overUnderOdds);
                 if (created) {
                     betsCreated['UNDER'] = true;
                 }
             }
 
             if (payloadInfo.odds.overLine !== null && payloadInfo.odds.overUnderOdds !== null && !betsCreated['OVER']) {
-                const created = await create(league, home, game.id, 'OVER', payloadInfo.odds.overLine, payloadInfo.odds.overUnderOdds);
+                const created = await create(feedback, league, home, game.id, 'OVER', payloadInfo.odds.overLine, payloadInfo.odds.overUnderOdds);
                 if (created) {
                     betsCreated['OVER'] = true;
                 }
@@ -89,7 +89,7 @@ async function populateRegularBets(leagues: string[]) {
     }
 }
 
-async function create(league: string, competitorId: string, eventId: string, betType: string, odds: number, line: number | null) {
+async function create(feedback: any, league: string, competitorId: string, eventId: string, betType: string, odds: number, line: number | null) {
     const betDetail = {
         'betType': betType,
         'competitorId': competitorId,
@@ -101,8 +101,7 @@ async function create(league: string, competitorId: string, eventId: string, bet
 
     const created = await createBet(league, 'GAME', [betDetail]);
     if (created) {
-        const feedback = getFeedbackInstance();
-
+        // const feedback = getFeedbackInstance();
         feedback.bets = [...feedback.bets, {
             league,
             betType,
