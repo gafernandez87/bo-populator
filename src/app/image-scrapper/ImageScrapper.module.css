@@ -11,16 +11,23 @@
     font-size: 3rem;
 }
 
-.options {
+.scrapperContainer {
+    width: 100%;
     display: flex;
     flex-direction: row;
+    justify-content: space-around;
+}
+
+.scrappers {
+    display: flex;
+    flex-direction: column;
     justify-content: space-around;
     width: 100%;
     gap: 1rem;
     position: relative;
 }
 
-.options .title {
+.scrappers .title {
     font-size: 16px;
     position: absolute;
     top: 10px;
@@ -31,4 +38,21 @@
 
 .select {
     height: 100%;
+}
+
+.teamsContainer {
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 10px;
+}
+
+
+.teamsContainer span {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
 }

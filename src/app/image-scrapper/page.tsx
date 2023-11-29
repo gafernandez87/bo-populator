@@ -23,17 +23,27 @@ export default function Page() {
             .then(teams => setTeamsWithoutLogo(teams));
     }
 
+    const getImages = () => { }
     return (
         <div className={styles.container}>
             <h1 className={styles.title}>Image Scrapper</h1>
-            <div className={styles.options}>
+            <div className={styles.scrappers}>
                 <Card>
-                    <p className={styles.title}>Teams</p>
-                    <Leagues leaguesChange={setSelectedLeagues}></Leagues>
-                    <Button click={getTeamsWithoutLogo}>Get Teams Without Logo</Button>
-                    <select className={styles.select} multiple>
-                        {teamsWithoutLogo.map(team => <option key={team.id} value={team.id}>{team.displayName}</option>)}
-                    </select>
+                    <div className={styles.scrapperContainer}>
+                        <p className={styles.title}>Teams</p>
+                        <Leagues leaguesChange={setSelectedLeagues}></Leagues>
+
+                        <div className={styles.teamsContainer}>
+                            <span>
+                                Teams Without Logo
+                                <Button disabled={selectedLeagues.length <= 0} click={getTeamsWithoutLogo} size={'sm'}>Get</Button>
+                            </span>
+                            <select className={styles.select} multiple>
+                                {teamsWithoutLogo.map(team => <option key={team.id} value={team.id}>{team.displayName}</option>)}
+                            </select>
+                            <Button click={getImages} size={'sm'}>Get Images</Button>
+                        </div>
+                    </div>
                 </Card>
                 <Card>
                     <p className={styles.title}>Players</p>

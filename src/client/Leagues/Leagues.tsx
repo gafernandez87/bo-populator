@@ -38,11 +38,14 @@ const Leagues: React.FC<LeaguesProps> = ({ leaguesChange }) => {
     return (
         <div>
             <div className={styles.leaguesContainer}>
-                <span>Leagues</span>
+                <span>
+                    Leagues
+                    <Button click={getLeagues} size={'sm'}>Get</Button>
+                </span>
                 <select onChange={selectLeagues} className={styles.select} multiple>
                     {leagues.map(league => <option key={league.id} value={league.id}>{league.name}</option>)}
                 </select>
-                <Button click={getLeagues} size={'sm'}>Get Leagues</Button>
+
             </div>
             <Modal show={isLoading}>
                 <h2>Loading</h2>

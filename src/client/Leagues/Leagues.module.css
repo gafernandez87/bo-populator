@@ -6,6 +6,14 @@
     gap: 10px;
 }
 
+.leaguesContainer span {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .select {
     height: 100%;
 }
