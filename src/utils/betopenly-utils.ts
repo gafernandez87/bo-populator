@@ -1,13 +1,15 @@
-const username = process.env.BO_U;
-const password = process.env.BO_P;
+const boUsername = process.env.BO_U;
+const boPassword = process.env.BO_P;
 
 let token: string | null = null;
+
+const IS_PROD = false;
 
 export async function getLeagues(eventType: string) {
     console.log("Getting leagues");
 
-    await getToken();
-    return fetch(`https://api-dev.betopenly.com/v1/events/${eventType}/leagues?live=false`)
+    const { host } = await prepareRequest();
+    return fetch(`${host}/v1/events/${eventType}/leagues?live=false`)
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
@@ -16,9 +18,7 @@ export async function getLeagues(eventType: string) {
         })
         .then((sports: any) => {
             const leagues = sports.reduce((acc: string[], curr: any) => {
-                console.log(curr);
-                const sportLeagues = curr.leagues.map((l: any) => l.name || l.league);
-                acc.push(...sportLeagues);
+                acc.push(...curr.leagues);
                 return acc;
             }, []);
 
@@ -28,7 +28,8 @@ export async function getLeagues(eventType: string) {
 }
 
 export async function getUpcomingPreview(league: string, eventType: string) {
-    return fetch(`https://api-dev.betopenly.com/v1/events/${eventType}/${league}/upcoming-preview?timeframe=-1&live=false`)
+    const { host } = await prepareRequest();
+    return fetch(`${host}/v1/events/${eventType}/${league}/upcoming-preview?timeframe=-1&live=false`)
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
@@ -38,8 +39,9 @@ export async function getUpcomingPreview(league: string, eventType: string) {
 }
 
 export async function createBet(league: string, eventType: string, betDetails: any[]) {
-    await getToken();
     console.log("Creating", league);
+
+    const { host, config } = await prepareRequest();
 
     const bet = {
         'league': league,
@@ -53,73 +55,81 @@ export async function createBet(league: string, eventType: string, betDetails: a
         'betDetails': betDetails
     }
 
-    return fetch('https://api-dev.betopenly.com/v1/bets', {
+    return fetch(`${host}/v1/bets`, {
+        ...config,
         method: 'POST',
         body: JSON.stringify(bet),
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }
-    })
-        .then((res: any) => {
-            console.log('Status code: ', res.status);
-            return res.status == 201;
-        })
-        .catch((err: any) => {
-            console.log('Error: ', err.message);
-            return false;
-        });
+    }).then((res: any) => {
+        console.log('Status code: ', res.status);
+        return res.status == 201;
+    }).catch((err: any) => {
+        console.log('Error: ', err.message);
+        return false;
+    });
 
 }
 
 export async function createContest(league: string, payload: any) {
     console.log("Creating Contest", league);
+    const { host, config } = await prepareRequest();
 
-    return fetch('https://api-dev.betopenly.com/v1/bets', {
+    return fetch(`${host}/v1/bets`, {
+        ...config,
         method: 'POST',
         body: JSON.stringify(payload),
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then((res: any) => {
-            console.log('Status code: ', res.status);
-            return res.status == 201;
-        })
-        .catch((err: any) => {
-            console.log('Error: ', err.message);
-            return false;
-        });
-}
-
-function getToken() {
-    if (token) {
-        return Promise.resolve(token);
-    }
-
-    return fetch('https://api-dev.betopenly.com/v1/cas/login', {
-        method: 'POST',
-        body: JSON.stringify({ username: username, password: password }),
-        headers: { 'Content-Type': 'application/json' }
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then((res: any) => {
-            token = res.data;
-            return token;
-        })
-        .catch((err: any) => {
-            console.log('Error: ', err.message);
-            return null;
-        });
+    }).then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+    }).then((res: any) => {
+        console.log('Status code: ', res.status);
+        return res.status == 201;
+    }).catch((err: any) => {
+        console.log('Error: ', err.message);
+        return false;
+    });
 }
 
 function calculateAmountToWin(amount: number, betDetails: any[]) {
     const oddsMultiplier = (betDetails.reduce((acc, bet) => acc * (1 + bet.odds), 1) - 1) * 0.9;
     return amount * oddsMultiplier;
+}
+
+async function prepareRequest() {
+    await getToken();
+
+    const host = getHost();
+    const config = {
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }
+    };
+
+    return { host, config };
+}
+
+function getHost(): string {
+    return IS_PROD ? 'https://api.betopenly.com' : 'https://api-dev.betopenly.com';
+}
+
+async function getToken() {
+    if (token) return Promise.resolve(token);
+
+    const host = getHost();
+
+    return fetch(`${host}/v1/cas/login`, {
+        method: 'POST',
+        body: JSON.stringify({ username: boUsername, password: boPassword }),
+        headers: { 'Content-Type': 'application/json' }
+    }).then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+    }).then((res: any) => {
+        token = res.data;
+        return token;
+    }).catch((err: any) => {
+        console.log('Error: ', err.message);
+        return null;
+    });
 }

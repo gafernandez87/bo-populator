@@ -10,24 +10,7 @@
     background: #212121;
     border: 2px solid #313131;
     transition: all 0.5s cubic-bezier(0.23, 1, 0.320, 1);
-}
-
-.content {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 20px;
-    color: #e8e8e8;
-    transition: all 0.5s cubic-bezier(0.23, 1, 0.320, 1);
-}
-
-.content .heading {
-    font-weight: 700;
-    font-size: 27px;
-}
-
-.content .para {
-    line-height: 1.5;
+    color: white;
 }
 
 .card:hover {

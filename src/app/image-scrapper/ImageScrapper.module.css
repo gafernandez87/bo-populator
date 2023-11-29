@@ -10,3 +10,25 @@
     margin: 2rem 0;
     font-size: 3rem;
 }
+
+.options {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 100%;
+    gap: 1rem;
+    position: relative;
+}
+
+.options .title {
+    font-size: 16px;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    color: #c3b8b8;
+    margin: 0;
+}
+
+.select {
+    height: 100%;
+}
