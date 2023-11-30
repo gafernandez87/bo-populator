@@ -28,7 +28,6 @@ const Leagues: React.FC<LeaguesProps> = ({ leaguesChange }) => {
         fetch('/api/leagues')
             .then(res => res.json())
             .then((leagues: any[]) => {
-                console.log(leagues);
                 setLoading(false);
                 const sortedLeagues = leagues.sort((l1, l2) => l1.id.localeCompare(l2.id));
                 setLeagues(sortedLeagues);
