@@ -2,7 +2,7 @@ const admin = process.env.BO_U_A;
 
 let token: string | null = null;
 
-const IS_PROD = false;
+const IS_PROD = true;
 
 export interface CompetitorDB {
     id: string;

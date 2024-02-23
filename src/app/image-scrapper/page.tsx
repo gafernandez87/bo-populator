@@ -15,6 +15,11 @@ const ESP_LEAGUE_MAPPER: { [key: string]: string } = {
     "ENGLAND_CHAMPIONSHIP": "lc",
     "BELGIUM_JUPILER_PRO_LEAGUE": 'Belgian First Division A',
     "USA_MAJOR_LEAGUE_SOCCER": "MLS",
+    "ENGLAND_FA_CUP": "FAC",
+    "FRANCE_LIGUE_1": "Ligue 1",
+    "GERMANY_BUNDESLIGA": "Bund",
+    "ITALY_SERIE_A": "Serie A",
+    "SPAIN_LA_LIGA": "Liga F",
 }
 
 export default function Page() {

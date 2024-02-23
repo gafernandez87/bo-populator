@@ -3,7 +3,7 @@ const boPassword = process.env.BO_P;
 
 let token: string | null = null;
 
-const IS_PROD = false;
+const IS_PROD = true;
 
 export async function getLeagues(eventType: string) {
     console.log("Getting leagues");

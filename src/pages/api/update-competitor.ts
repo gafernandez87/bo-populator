@@ -38,7 +38,7 @@ export default async function handler(
 
 async function scrapImage(league: string, name: string): Promise<string | null> {
     try {
-        const teamName = name.split(" ").filter(word => !['fc', 'cf'].includes(word.toLocaleLowerCase())).join(' ');
+        const teamName = name.split(" ").filter(word => !['fc', 'cf', 'ss'].includes(word.toLocaleLowerCase())).join(' ');
         let img = null;
 
         const response: any = await fetch(`https://site.web.api.espn.com/apis/search/v2?region=us&lang=en&page=1&query=${teamName}&type=team`);
